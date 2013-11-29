@@ -1,0 +1,1 @@
+A module for persisting objects between clients through socket.io
