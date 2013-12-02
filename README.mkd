@@ -1,1 +1,11 @@
 A module for persisting objects between clients through socket.io
+
+##Usage
+
+####Clientside
+
+`
+    var livemodel = require('livemodel');
+    var Client = new livemodel.Client();
+`
+
