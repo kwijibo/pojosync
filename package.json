@@ -2,7 +2,7 @@
   "name": "livemodel",
   "version": "0.0.0",
   "description": "sharing js objects through socket.io",
-  "main": "server.js",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
@@ -18,6 +18,9 @@
     "sharing",
     "sockets"
   ],
+  "dependencies": {
+  	"socket.io": "0.9.16"  
+  },
   "author": "Keith Alexander",
   "license": "BSD",
   "readmeFilename": "README.mkd",
