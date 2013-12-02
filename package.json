@@ -1,0 +1,25 @@
+{
+  "name": "livemodel",
+  "version": "0.0.0",
+  "description": "sharing js objects through socket.io",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jasmine-node test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samkuhn/livemodel"
+  },
+  "keywords": [
+    "object",
+    "sharing",
+    "sockets"
+  ],
+  "author": "Keith Alexander",
+  "license": "BSD",
+  "readmeFilename": "README.mkd",
+  "gitHead": "ec58e283640a813e37210a67cabfdeef2ef44817"
+}
