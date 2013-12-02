@@ -35,7 +35,6 @@ describe("Store", function(){
       var foo = {a: 'hello',b:'world'};
       var resource = TestStore.put(foo);
       resource.a = 'Goodbye';
-      console.log(resource, foo, next);
       var next = TestStore.put(resource);
       expect(TestStore.get(resource.id)).toEqual(resource);
     });
