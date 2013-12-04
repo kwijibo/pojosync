@@ -12,6 +12,7 @@ describe("Client", function(){
       var fun = function(a){ return a;  };
       this.Client.addSocketCallback(fun);
       expect(this.Client.socketCallbacks.length).toBe(1);
+      this.Client.removeSocketCallback(fun);
       expect(this.Client.socketCallbacks.length).toBe(0);
     });
   });
