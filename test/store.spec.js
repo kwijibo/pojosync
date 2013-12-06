@@ -5,27 +5,19 @@ describe("Store", function(){
   beforeEach(function(){
     TestStore = new Store();
   });  
-  describe("assignID, not passed a type", function(){
+  describe("assignID", function(){
     it("should assign an id based on 'resource' ", function(){
       var res = TestStore.assignID({nottype:'Rabbit'});
-      expect(res.id).toBe('resource:1');
+      expect(res.id).toBeTruthy();
       var res2 = TestStore.assignID({nottype:'Rabbit'});
-      expect(res2.id).toBe('resource:2');
-    });
-  });
-  describe("assignID, passed a type", function(){
-    it("should assign an id based on the type ", function(){
-      var res = TestStore.assignID({type:'Rabbit'});
-      expect(res.id).toBe('Rabbit:1');
-      var res2 = TestStore.assignID({type:'Rabbit'});
-      expect(res2.id).toBe('Rabbit:2');
+      expect(res2.id).not.toEqual(res.id);
     });
   });
   describe(".put with a new object", function(){
     it("should add an id to the object and insert it into the index", function(){
       var foo = {a: 'hello',b:'world'};
       var resource = TestStore.put(foo);
-      expect(resource.id).toEqual('resource:1');
+      expect(resource.id).toBeTruthy();
       expect(resource.a).toEqual(foo.a);
       expect(resource.b).toEqual(foo.b);
     });
@@ -58,6 +50,40 @@ describe("Store", function(){
       expect(TestStore.list({type:'Dog'}).length).toBe(1);
       expect(TestStore.list({type:'Mouse'}).length).toBe(3);
       expect(TestStore.list({type:'Mouse',name:'Mini'}).length).toBe(1);
+    });
+  });
+
+  describe('.indexResource', function(){
+    beforeEach(function(){
+       this.resource = { 
+        name: 'Sherlock Holmes', 
+        friends: [ { id: 'mrsH', name: 'Mrs Hudson' }, {name: 'Dr. Watson'}], 
+        mortalEnemy: {
+          name: 'Prof. Moriarty'
+        } 
+      };
+      TestStore.indexResource(this.resource);
+    });
+    it("should copy object property values to top level in the index", function(){
+      expect(TestStore.get('mrsH')).toBe(this.resource.friends[0]);
+    });
+    it("should assign ids to object property values that don't have them", function(){
+      expect(this.resource.friends[1].id).toBeTruthy();
+    });
+  });
+
+  describe(".get", function(){
+    it("should expand out references", function(){
+      var a= {
+        name: 'Aragorn',
+        child: {
+          name: 'Arathorn',
+          child: {
+            name: 'Arador'
+          }
+        }
+      };
+      var aragorn = TestStore.put(a);
     });
   });
 
