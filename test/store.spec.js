@@ -87,4 +87,13 @@ describe("Store", function(){
     });
   });
 
+
+  describe("flatten and unflatten", function(){
+    it("should keep arrays as arrays", function(){
+      var a = {id: 'a', list: [ 2,4,7,8 ]};
+      var index = TestStore.flatten(a);
+      expect(Array.isArray(index['a'].list)).toBeTruthy();
+    });
+  });
+
 });
