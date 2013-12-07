@@ -70,6 +70,10 @@ describe("Store", function(){
     it("should assign ids to object property values that don't have them", function(){
       expect(this.resource.friends[1].id).toBeTruthy();
     });
+    it("should cope with circular references", function(){
+      this.resource.friends[0].friends = this.resource;
+      TestStore.indexResource(this.resource);
+    });
   });
 
   describe(".get", function(){
