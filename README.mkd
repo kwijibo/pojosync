@@ -48,7 +48,8 @@ updated version of an already-shared object.
 #### Client.list
 
 Takes an object pattern and returns an array of any objects matching
-that pattern.
+that pattern. This array will be kept up to date as objects are
+`.put`.
 
 
 ##Storage
