@@ -1,11 +1,38 @@
-A module for persisting objects between clients through socket.io
+Syncing POJOs with socket.io
 
 ##Usage
 
-####Clientside
+(Use [browserify](http://browserify.org/) to create a file for use in browser)
 
-`
+
     var livemodel = require('livemodel');
     var Client = new livemodel.Client();
-`
+    var flossy = { type: 'Sheep', name: 'Flossy', age: 3 };
+
+
+
+    Client.put(flossy); 
+
+ Saves `flossy` to the server and shares the object with other clients.
+
+
+    var farms = Client.list({type: 'Farm'}, optional_callback); 
+
+
+`farms` will initially be an empty array, but will fill with data once
+the server has returned it.
+
+    flossy.farm = {type:'Farm', name: 'Greenacres' };
+    Client.put(flossy);
+
+`farms` will then include 'Greenacres', and `flossy` will be updated on
+all clients.
+
+
+##Storage
+
+Currently data is simply persisted on your server as a JSON file. This
+is simple but has its limitations - all the data must be loaded into
+memory at once. It should not be difficult to add persistence to other
+backends, such as MongoDB.
 
