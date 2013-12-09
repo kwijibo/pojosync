@@ -8,9 +8,6 @@ Syncing POJOs with socket.io
     var livemodel = require('livemodel');
     var Client = new livemodel.Client();
     var flossy = { type: 'Sheep', name: 'Flossy', age: 3 };
-
-
-
     Client.put(flossy); 
 
  Saves `flossy` to the server and shares the object with other clients.
