@@ -1,4 +1,3 @@
-
 Syncing POJOs between clients/browsers, and your node.js server, with socket.io
 
 ##What it does
@@ -16,8 +15,8 @@ Once you have shared an object with
 (Use [browserify](http://browserify.org/) to create a file for use in browser)
 
 
-    var livemodel = require('livemodel');
-    var Client = new livemodel.Client();
+    var pojo = require('pojosync');
+    var Client = new pojo.Client();
     var flossy = { type: 'Sheep', name: 'Flossy', age: 3 };
     Client.put(flossy); 
 
