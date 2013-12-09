@@ -3,8 +3,20 @@ var Client = require('../lib/client.js');
 describe("Client", function(){
   
   beforeEach(function(){
-    var fun = function(){ return { on: fun, emit: fun } };
+    var jsonify = function(ev, a){ return JSON.stringify(a)};
+    var fun = function(){ return { on: fun, emit: jsonify } };
     this.Client = new Client({connect:fun });
+  });
+  describe(".put", function(){
+    it("should cope with circular structures", function(){
+      var a = {};
+      var b = {};
+      var c = {};
+      a.next = b;
+      b.next = c;
+      c.next = a;
+      this.Client.put(a);
+    });
   });
 
   describe("removeSocketCallback", function(){

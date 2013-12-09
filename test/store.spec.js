@@ -71,7 +71,8 @@ describe("Store", function(){
       expect(this.resource.friends[1].id).toBeTruthy();
     });
     it("should cope with circular references", function(){
-      this.resource.friends[0].friends = this.resource;
+      this.resource.friends[0].friend = this.resource;
+      this.resource.friends[1].friend = this.resource.friends[0];
       TestStore.indexResource(this.resource);
     });
   });
@@ -97,6 +98,12 @@ describe("Store", function(){
       var a = {id: 'a', list: [ 2,4,7,8 ]};
       var index = TestStore.flatten(a);
       expect(Array.isArray(index['a'].list)).toBeTruthy();
+    });
+    it("should cope with circular references", function(){
+      var a = {}, b = {}, c = {};
+      a.next = b; b.next = c; c.next = a;
+      var data = TestStore.flatten(a);
+      expect(data).toBe(3);
     });
   });
 
