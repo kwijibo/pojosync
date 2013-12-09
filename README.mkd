@@ -1,4 +1,15 @@
-Syncing POJOs with socket.io
+
+Syncing POJOs between clients/browsers, and your node.js server, with socket.io
+
+##What it does
+
+This library allows you to keep data objects up to date between multiple
+clients and a server. 
+
+## How it works
+
+Once you have shared an object with
+`Client.put(object)`, it (and any other objects it refers to) is assigned an ID, flattened for transport, and pushed to the server. Shared objects are then broadcast to all connected clients.
 
 ##Usage
 
@@ -22,8 +33,22 @@ the server has returned it.
     flossy.farm = {type:'Farm', name: 'Greenacres' };
     Client.put(flossy);
 
-`farms` will then include 'Greenacres', and `flossy` will be updated on
+`farms` will then include the new object, and `flossy` will be updated on
 all clients.
+
+## API
+
+
+#### Client.put 
+
+Takes an object and shares it with the server (which
+broadcasts it to other clients). The object can be new, or a locally
+updated version of an already-shared object.
+
+#### Client.list
+
+Takes an object pattern and returns an array of any objects matching
+that pattern.
 
 
 ##Storage
