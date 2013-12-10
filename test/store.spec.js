@@ -75,6 +75,14 @@ describe("Store", function(){
       this.resource.friends[1].friend = this.resource.friends[0];
       TestStore.indexResource(this.resource);
     });
+    it("should cope with circular references", function(){
+      var a = {}, b = {}, c = {};
+      a.next = b; b.next = c;  c.next = a;
+      TestStore.indexResource(a);
+      expect(a.id).toBeTruthy();
+      expect(b.id).toBeTruthy();
+      expect(c.id).toBeTruthy();
+    });
   });
 
   describe(".get", function(){
@@ -100,10 +108,10 @@ describe("Store", function(){
       expect(Array.isArray(index['a'].list)).toBeTruthy();
     });
     it("should cope with circular references", function(){
-      var a = {}, b = {}, c = {};
-      a.next = b; b.next = c; c.next = a;
+      var a = {id:'a'}, b = {id:'b'}, c = {id:'c'};
+      a.next = b; b.next = c;  c.next = a;
       var data = TestStore.flatten(a);
-      expect(data).toBe(3);
+      expect(Object.keys(data).length).toBe(3);
     });
   });
 

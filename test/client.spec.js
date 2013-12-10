@@ -17,6 +17,12 @@ describe("Client", function(){
       c.next = a;
       this.Client.put(a);
     });
+    it("should add new related objects to the appropriate lists", function(){
+      var farms = this.Client.list({type:'Farm'});
+      var flossy = {name: 'flossy', farm: { name: 'Green Acres', type: 'Farm' }};
+      this.Client.put(flossy);
+      expect(farms.length).toBe(1);
+    });
   });
 
   describe("removeSocketCallback", function(){
