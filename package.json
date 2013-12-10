@@ -1,7 +1,7 @@
 {
-  "name": "livemodel",
-  "version": "0.0.0",
-  "description": "sharing js objects through socket.io",
+  "name": "pojosync",
+  "version": "0.0.1",
+  "description": "syncing js objects across clients and server with socket.io",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -11,19 +11,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/samkuhn/livemodel"
+    "url": "https://github.com/kwijibo/pojosync"
   },
   "keywords": [
+    "pojo",
     "object",
     "sharing",
     "sockets"
   ],
   "dependencies": {
-  	"socket.io": "0.9.16",
-    "promise":"3.2.0"
+  	"socket.io": "0.9.16"
   },
   "author": "Keith Alexander",
   "license": "BSD",
-  "readmeFilename": "README.mkd",
-  "gitHead": "ec58e283640a813e37210a67cabfdeef2ef44817"
+  "readmeFilename": "README.mkd"
 }
