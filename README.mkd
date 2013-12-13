@@ -12,8 +12,25 @@ Once you have shared an object with
 
 ##Usage
 
-(Use [browserify](http://browserify.org/) to create a file for use in browser)
 
+###Server
+
+Example use with express.js. (For alternate socket.io setups, see
+[socket.io's How To](http://socket.io/#how-to-use) . )
+
+       var pojosync = require('pojosync')
+         , app = express()
+         , server = require('http').createServer(app)
+         , io = require('socket.io').listen(server, {log:false})
+         , Dataserver = new pojosync.Server(io);
+
+
+###Client
+
+(Use [browserify](http://browserify.org/) to create a file for use in browser, then reference it with a script tag. 
+You will also need to add:
+
+    <script src="/socket.io/socket.io.js"></script>
 
     var pojo = require('pojosync');
     var Client = new pojo.Client();

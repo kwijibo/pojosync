@@ -85,21 +85,6 @@ describe("Store", function(){
     });
   });
 
-  describe(".get", function(){
-    it("should expand out references", function(){
-      var a= {
-        name: 'Aragorn',
-        child: {
-          name: 'Arathorn',
-          child: {
-            name: 'Arador'
-          }
-        }
-      };
-      var aragorn = TestStore.put(a);
-    });
-  });
-
 
   describe("flatten and unflatten", function(){
     it("should keep arrays as arrays", function(){
@@ -113,6 +98,17 @@ describe("Store", function(){
       var data = TestStore.flatten(a);
       expect(Object.keys(data).length).toBe(3);
     });
+
+    it("should unflatten several levels deep", function(){
+      var sheet = { rows: [ { cols: [ {value: "a"}, {value: "b"} ] }] };
+      TestStore.put(sheet);
+      var data = TestStore.flatten(sheet);
+      expect(Object.keys(data).length).toBe(4);
+      TestStore.unflattenAndPut(data);
+      console.log(JSON.stringify(TestStore.index));
+      expect(sheet.rows[0].cols[0].value).toEqual("a");
+    });
+
   });
 
 });
