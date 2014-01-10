@@ -19,10 +19,16 @@ describe("Client", function(){
     });
     it("should add new related objects to the appropriate lists", function(){
       var farms = this.Client.list({type:'Farm'});
+      var flossylist = this.Client.list({name: 'flossy'});
       var flossy = {name: 'flossy', farm: { name: 'Green Acres', type: 'Farm' }};
-      this.Client.put(flossy);
+      var indexedFlossy = this.Client.put(flossy);
       expect(farms.length).toBe(1);
+      expect(flossylist[0].farm.name).toEqual('Green Acres');
+      expect(indexedFlossy.farm.name).toEqual('Green Acres');
     });
+
+
+
   });
 
   describe("removeSocketCallback", function(){

@@ -30,37 +30,45 @@ var Socket = function(){
 };
 var serverSocket = new Socket();
 
-var serverIO = {
-  sockets: serverSocket
-};
-var clientIO = {
-  clients : [],
-  connect: function(){
-    var serversock = new Socket();
-    var clientsock = new Socket();
-    clientsock.addPeer(serversock);
-    clientsock.id = 'client';
-    serversock.id = 'server';
-    serversock.addPeer(clientsock);
-    serverIO.sockets.fire('connection', serversock, function(){});
-    clientIO.clients.push(clientsock);
-    return clientsock;
-  }
-};
 
 var Server, ClientA, ClientB;
 
 describe("Socket Interaction", function(){
   beforeEach(function(){
+   serverIO = {
+      sockets: serverSocket
+    };
+  clientIO = {
+      clients : [],
+      connect: function(){
+        var serversock = new Socket();
+        var clientsock = new Socket();
+        clientsock.addPeer(serversock);
+        clientsock.id = 'client';
+        serversock.id = 'server';
+        serversock.addPeer(clientsock);
+        serverIO.sockets.fire('connection', serversock, function(){});
+        clientIO.clients.push(clientsock);
+        return clientsock;
+  }
+};
     Server = new live.Server(serverIO);
     ClientA = new live.Client(clientIO);
     ClientB = new live.Client(clientIO);
   });
+
   describe(".put a new object", function(){
     it("should share between the clients", function(){
       ClientA.put({id: 'Sherlock', name: 'Sherlock'});
+      expect(ClientB.Store.index).toEqual(ClientA.Store.index);
+//      expect(Server.Store.index).toEqual(ClientA.Store.index);
+    });
+    it("should unflatten objects", function(){ 
+      var sherlock = ClientA.put({id: 'Sherlock', name: 'Sherlock', friend: { name: 'Watson'}});
+      console.log(sherlock);
+      expect(sherlock.friend.name).toBe('Watson');
       expect(ClientB.Store).toEqual(ClientA.Store);
-      expect(Server.Store).toEqual(ClientA.Store);
+//      expect(Server.Store).toEqual(ClientA.Store);
     });
   });
 });
