@@ -27,6 +27,15 @@ describe("Client", function(){
       expect(indexedFlossy.farm.name).toEqual('Green Acres');
     });
 
+    it("should not delete subsidiary objects of the old version", function(){
+      var flossy = {name: 'flossy', farm: { name: 'Green Acres', type: 'Farm' }};
+      this.Client.put(flossy);
+      flossy.farm = {name: 'Waltons Farm', type: 'Farm'};
+      this.Client.put(flossy);
+      var farms = this.Client.list({type:'Farm'});
+      expect(farms.length).toBe(2);
+    });
+
 
 
   });

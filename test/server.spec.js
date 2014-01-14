@@ -65,7 +65,6 @@ describe("Socket Interaction", function(){
     });
     it("should unflatten objects", function(){ 
       var sherlock = ClientA.put({id: 'Sherlock', name: 'Sherlock', friend: { name: 'Watson'}});
-      console.log(sherlock);
       expect(sherlock.friend.name).toBe('Watson');
       expect(ClientB.Store).toEqual(ClientA.Store);
 //      expect(Server.Store).toEqual(ClientA.Store);
