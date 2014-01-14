@@ -1,6 +1,6 @@
 var Store = require('../lib/store.js');
 var TestStore = new Store();
-
+var Utils = require('../lib/utils.js');
 describe("Store", function(){
   beforeEach(function(){
     TestStore = new Store();
@@ -32,6 +32,19 @@ describe("Store", function(){
     });
   });
 
+  describe(".put replacing a literal with an object", function(){
+    it("should replace the original object", function(){
+      spyOn(Utils, 'replaceResourceContents').andCallThrough();
+      var flossy = {id: 'flossy', type: 'Sheep', name: 'flossy', farm: 'Green Acres'};
+      TestStore.put(flossy);
+      var flossy2 = {id: 'flossy', type: 'Sheep', name: 'flossy', farm: { name: 'Waltons Farm'} };
+      TestStore.put(flossy2);
+      var sheep = TestStore.list({type:'Sheep'});
+      expect(sheep[0].farm.name).toEqual( 'Waltons Farm');
+      expect(flossy.farm.name).toEqual( 'Waltons Farm');
+      expect(Utils.replaceResourceContents).toHaveBeenCalledWith(flossy,flossy2);
+    });
+  });
   describe(".delete", function(){
     it("should delete the object from the store", function(){
       var res = TestStore.put({type:'Dog',name:'Pluto', 'id': 'Dog:1'});
@@ -105,7 +118,7 @@ describe("Store", function(){
       var data = TestStore.flatten(sheet);
       expect(Object.keys(data).length).toBe(4);
       TestStore.unflattenAndPut(data);
-      console.log(JSON.stringify(TestStore.index));
+      JSON.stringify(TestStore.index);
       expect(sheet.rows[0].cols[0].value).toEqual("a");
     });
 

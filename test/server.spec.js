@@ -69,5 +69,16 @@ describe("Socket Interaction", function(){
       expect(ClientB.Store).toEqual(ClientA.Store);
 //      expect(Server.Store).toEqual(ClientA.Store);
     });
+    describe("replacing literal values with objects", function(){
+      it("should replace the value", function(){
+        var flossy = {type: 'Sheep', name: 'flossy', farm: 'Green Acres'};
+        ClientA.put(flossy);
+        flossy.farm = {name: 'Waltons Farm', type: 'Farm'};
+        ClientA.put(flossy);
+        var sheep = ClientB.list({type:'Sheep'});
+        expect(sheep[0].farm.name).toEqual( 'Waltons Farm');
+        expect(flossy.farm.name).toEqual( 'Waltons Farm');
+      });
+    });
   });
 });

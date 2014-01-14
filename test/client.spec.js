@@ -6,6 +6,7 @@ describe("Client", function(){
     var jsonify = function(ev, a){ return JSON.stringify(a)};
     var fun = function(){ return { on: fun, emit: jsonify } };
     this.Client = new Client({connect:fun });
+    this.Client.Store.index = {};
   });
   describe(".put", function(){
     it("should cope with circular structures", function(){
@@ -36,6 +37,27 @@ describe("Client", function(){
       expect(farms.length).toBe(2);
     });
 
+    describe(".receivePut replacing literal values with objects", function(){
+      it("should replace the value with an object reference", function(){
+        var flossy = {id: 'flossy', type: 'Sheep', name: 'flossy', farm: 'Green Acres'};
+        this.Client.put(flossy);
+        var putdata = { 
+          flossy: { type: 'Sheep',
+           name: 'flossy',
+           farm: '@ktjy3416619593',
+           id: 'flossy' 
+          },
+          ktjy3416619593: { 
+            name: 'Waltons Farm', 
+            type: 'Farm', 
+            id: 'ktjy3416619593' } 
+        }
+        this.Client.receivePut(putdata)
+        var sheep = this.Client.list({type:'Sheep'});
+        expect(sheep[0].farm.name).toEqual( 'Waltons Farm');
+        expect(flossy.farm.name).toEqual( 'Waltons Farm');
+      });
+    });
 
 
   });
