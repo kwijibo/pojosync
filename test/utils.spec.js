@@ -33,13 +33,23 @@ describe("Utils.replaceResourceContents", function(){
     expect(before.character.friends).toEqual(after.character.friends);
   });
 
+  it("should not replace contents of a.p with b.p if they have different ids, but replace the whole object", function(){
+    var a = {id: 'a' };
+    var b = {};
+    a.likes = {id:'c'};
+    b.likes = a.likes;
+    var new_a = { id: 'a', likes: {id: 'd'} };
+    Utils.replaceResourceContents(a, new_a);
+    expect(a.likes.id).toBe('d');
+    expect(b.likes.id).toBe('c');
+  });
+
   it("should change number values", function(){
     var b = {a:1};
     var a = {a:4};
     Utils.replaceResourceContents(b,a);
     expect(b.a).toBe(4);
   });
-
 
 });
 

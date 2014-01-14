@@ -124,4 +124,21 @@ describe("Store", function(){
 
   });
 
+  describe("put", function(){
+    it("should not swap subsidiary objects within other objects", function(){
+      var admin = {type: 'Role', name: 'Admin', id: 'admin'};
+      var user = {type: 'Role', name: 'User', id: 'user'};
+      var user_a = {type: 'User', id: 'a', role: admin };
+      var user_b = {type: 'User', id: 'b', role: admin };
+      TestStore.put(user_a);
+      TestStore.put(user_b);
+      user_a.role = user;
+      var flat = TestStore.flatten(user_a);
+      TestStore.unflattenAndPut(flat);
+      expect(user_b.role).toBe(admin);
+      expect(user_b.role.name).toBe('Admin');
+      expect(TestStore.get('b').role.name).toBe('Admin');
+    })
+  });
+  
 });

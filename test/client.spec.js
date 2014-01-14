@@ -59,6 +59,32 @@ describe("Client", function(){
       });
     });
 
+    describe(".receivePut replacing object values", function(){
+      it("should not replace the object as a property value elsewhere in the index", function(){
+        var greenacres = {id: 'ga', type: 'Farm', name: 'Greenacres'};
+        var flossy = {id: 'flossy', type: 'Sheep', name: 'flossy', farm: greenacres};
+        var bunty = {id: 'bunty', type: 'Sheep', name: 'bunty', farm: greenacres};
+        this.Client.put(flossy);
+        this.Client.put(bunty);
+        var putdata = { 
+          flossy: { type: 'Sheep',
+           name: 'flossy',
+           farm: '@wf',
+           id: 'flossy' 
+          },
+          wf: { 
+            name: 'Waltons Farm', 
+            type: 'Farm', 
+            id: 'wf' } 
+        }
+        this.Client.receivePut(putdata)
+        var sheep = this.Client.list({type:'Sheep'});
+        expect(bunty.farm.name).toEqual( 'Greenacres');
+        expect(flossy.farm.name).toEqual( 'Waltons Farm');
+      });
+    });
+
+
 
   });
 
