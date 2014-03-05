@@ -33,6 +33,8 @@ var serverSocket = new Socket();
 
 var Server, ClientA, ClientB;
 
+
+
 describe("Socket Interaction", function(){
   beforeEach(function(){
    serverIO = {
@@ -55,6 +57,23 @@ describe("Socket Interaction", function(){
     Server = new live.Server(serverIO);
     ClientA = new live.Client(clientIO);
     ClientB = new live.Client(clientIO);
+  });
+
+  describe("registerFilter", function(){
+    it("should not apply the 'put' until it has gone through the filter", function(){
+      var filterCalled=false;
+      var putCalled = false;
+      Server.registerFilter('put', function(data,success,err){
+        success(data);
+        filterCalled=true;
+      });
+      var data = {foo: "bar"};
+      ClientA.put(data, function(data){ 
+        putCalled=true;
+      });
+      expect(filterCalled).toBe(true);
+      expect(putCalled).toBe(true);
+    }); 
   });
 
   describe(".put a new object", function(){
