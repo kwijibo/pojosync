@@ -1,6 +1,6 @@
 {
   "name": "pojosync",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "syncing js objects across clients and server with socket.io",
   "main": "index.js",
   "directories": {
