@@ -3,7 +3,9 @@ var ID_FIELD = Utils.ID_FIELD;
 
 describe("Utils.resourceIsEmpty", function(){
   it("should return true when the only key is 'id'", function(){
-    expect(Utils.resourceIsEmpty({id:'foo'})).toBe(true);
+    var res = {};
+    res[ID_FIELD]='foo';
+    expect(Utils.resourceIsEmpty(res)).toBe(true);
   });
   it("should return true when there are no keys", function(){
     expect(Utils.resourceIsEmpty({})).toBe(true);
