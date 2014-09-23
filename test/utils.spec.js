@@ -1,4 +1,5 @@
 var Utils = require('../lib/utils.js');
+var ID_FIELD = Utils.ID_FIELD;
 
 describe("Utils.resourceIsEmpty", function(){
   it("should return true when the only key is 'id'", function(){
@@ -34,14 +35,18 @@ describe("Utils.replaceResourceContents", function(){
   });
 
   it("should not replace contents of a.p with b.p if they have different ids, but replace the whole object", function(){
-    var a = {id: 'a' };
-    var b = {};
-    a.likes = {id:'c'};
+    var a = {'@id': 'a' };
+    var b = {'@id': 'b'};
+    a.likes = {'@id':'c'};
     b.likes = a.likes;
-    var new_a = { id: 'a', likes: {id: 'd'} };
+    var new_a = { '@id': 'a', likes: {'@id': 'd'} };
+    a[ID_FIELD] = 'a';
+    b[ID_FIELD] = 'b';
+    a.likes[ID_FIELD] = 'c';
+    new_a.likes[ID_FIELD] = 'd';
     Utils.replaceResourceContents(a, new_a);
-    expect(a.likes.id).toBe('d');
-    expect(b.likes.id).toBe('c');
+    expect(a.likes[ID_FIELD]).toBe('d');
+    expect(b.likes[ID_FIELD]).toBe('c');
   });
 
   it("should change number values", function(){

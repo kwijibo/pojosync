@@ -1,4 +1,7 @@
+var Utils = require('../lib/utils.js');
+var ID_FIELD = Utils.ID_FIELD;
 var live = require('../index.js');
+
 var Socket = function(){
   var self = this;
   this.events = {};
@@ -63,7 +66,7 @@ describe("Socket Interaction", function(){
     it("should not apply the 'put' until it has gone through the filter", function(){
       var filterCalled=false;
       var putCalled = false;
-      Server.registerFilter('put', function(data,success,err){
+      Server.registerFilter('put', function(server,data,success){
         success(data);
         filterCalled=true;
       });
@@ -78,12 +81,16 @@ describe("Socket Interaction", function(){
 
   describe(".put a new object", function(){
     it("should share between the clients", function(){
-      ClientA.put({id: 'Sherlock', name: 'Sherlock'});
+      var blob = {id: 'Sherlock', name: 'Sherlock'};
+      blob[ID_FIELD] = blob.id;
+      ClientA.put(blob);
       expect(ClientB.Store.index).toEqual(ClientA.Store.index);
 //      expect(Server.Store.index).toEqual(ClientA.Store.index);
     });
     it("should unflatten objects", function(){ 
-      var sherlock = ClientA.put({id: 'Sherlock', name: 'Sherlock', friend: { name: 'Watson'}});
+      var blob = {id: 'Sherlock', name: 'Sherlock', friend: { name: 'Watson'}};
+      blob[ID_FIELD] = blob.id;
+      var sherlock = ClientA.put(blob);
       expect(sherlock.friend.name).toBe('Watson');
       expect(ClientB.Store).toEqual(ClientA.Store);
 //      expect(Server.Store).toEqual(ClientA.Store);

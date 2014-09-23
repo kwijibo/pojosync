@@ -1,4 +1,5 @@
 var Client = require('../lib/client.js');
+var ID_FIELD = require('../lib/utils.js').ID_FIELD;
 
 describe("Client", function(){
   
@@ -37,21 +38,35 @@ describe("Client", function(){
       expect(farms.length).toBe(2);
     });
 
+    it("should add new related objects to the appropriate lists with multiple lists", function(){
+      var farms = this.Client.list({type:'Farm'});
+      var flossylist = this.Client.list({name: 'flossy'});
+      var flossylistB = this.Client.list({name: 'flossy'});
+      var flossy = {name: 'flossy', farm: { name: 'Green Acres', type: 'Farm' }};
+      var indexedFlossy = this.Client.put(flossy);
+      expect(farms.length).toBe(1);
+      expect(flossylist[0].farm.name).toEqual('Green Acres');
+      expect(flossylistB[0].farm.name).toEqual('Green Acres');
+      expect(indexedFlossy.farm.name).toEqual('Green Acres');
+    });
     describe(".receivePut replacing literal values with objects", function(){
       it("should replace the value with an object reference", function(){
-        var flossy = {id: 'flossy', type: 'Sheep', name: 'flossy', farm: 'Green Acres'};
+        var flossy = { type: 'Sheep', name: 'flossy', farm: 'Green Acres'};
+        flossy[ID_FIELD] = 'flossy';
         this.Client.put(flossy);
         var putdata = { 
           flossy: { type: 'Sheep',
            name: 'flossy',
-           farm: '@ktjy3416619593',
+           farm: '@waltons',
            id: 'flossy' 
           },
-          ktjy3416619593: { 
+          waltons: { 
             name: 'Waltons Farm', 
             type: 'Farm', 
-            id: 'ktjy3416619593' } 
-        }
+            id: 'waltons' } 
+        };
+        putdata['flossy'][ID_FIELD] = 'flossy';
+        putdata['waltons'][ID_FIELD] = 'waltons';
         this.Client.receivePut(putdata)
         var sheep = this.Client.list({type:'Sheep'});
         expect(sheep[0].farm.name).toEqual( 'Waltons Farm');
@@ -64,6 +79,11 @@ describe("Client", function(){
         var greenacres = {id: 'ga', type: 'Farm', name: 'Greenacres'};
         var flossy = {id: 'flossy', type: 'Sheep', name: 'flossy', farm: greenacres};
         var bunty = {id: 'bunty', type: 'Sheep', name: 'bunty', farm: greenacres};
+        var datas = [greenacres,flossy,bunty];
+        for(var x = 0; x < datas.length; x++){
+          var d = datas[x];
+          d[ID_FIELD] = d.id;
+        }
         this.Client.put(flossy);
         this.Client.put(bunty);
         var putdata = { 
@@ -77,6 +97,9 @@ describe("Client", function(){
             type: 'Farm', 
             id: 'wf' } 
         }
+        putdata.flossy[ID_FIELD] = putdata.flossy.id;
+        putdata.wf[ID_FIELD] = putdata.wf.id;
+
         this.Client.receivePut(putdata)
         var sheep = this.Client.list({type:'Sheep'});
         expect(bunty.farm.name).toEqual( 'Greenacres');
@@ -95,6 +118,20 @@ describe("Client", function(){
       expect(this.Client.socketCallbacks.length).toBe(1);
       this.Client.removeSocketCallback(fun);
       expect(this.Client.socketCallbacks.length).toBe(0);
+    });
+  });
+  describe(".list", function(){
+  
+    it("should return data in the callback", function(){
+      var farms = this.Client.list({type:'Farm'});
+      var flossy = {name: 'flossy', farm: { name: 'Green Acres', type: 'Farm' }};
+      var indexedFlossy = this.Client.put(flossy);
+      var flossylist = this.Client.list({name: 'flossy'}, function(l){
+        console.log("list callback", l);
+        expect(flossylist[0].farm.name).toEqual('Green Acres');
+      });
+      expect(farms.length).toBe(1);
+      expect(indexedFlossy.farm.name).toEqual('Green Acres');
     });
   });
 

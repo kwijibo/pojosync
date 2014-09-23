@@ -1,6 +1,8 @@
 var Store = require('../lib/store.js');
 var TestStore = new Store();
 var Utils = require('../lib/utils.js');
+var ID_FIELD = Utils.ID_FIELD;
+
 describe("Store", function(){
   beforeEach(function(){
     TestStore = new Store();
@@ -8,16 +10,16 @@ describe("Store", function(){
   describe("assignID", function(){
     it("should assign an id based on 'resource' ", function(){
       var res = TestStore.assignID({nottype:'Rabbit'});
-      expect(res.id).toBeTruthy();
+      expect(res[ID_FIELD]).toBeTruthy();
       var res2 = TestStore.assignID({nottype:'Rabbit'});
-      expect(res2.id).not.toEqual(res.id);
+      expect(res2[ID_FIELD]).not.toEqual(res[ID_FIELD]);
     });
   });
   describe(".put with a new object", function(){
     it("should add an id to the object and insert it into the index", function(){
       var foo = {a: 'hello',b:'world'};
       var resource = TestStore.put(foo);
-      expect(resource.id).toBeTruthy();
+      expect(resource[ID_FIELD]).toBeTruthy();
       expect(resource.a).toEqual(foo.a);
       expect(resource.b).toEqual(foo.b);
     });
@@ -28,7 +30,7 @@ describe("Store", function(){
       var resource = TestStore.put(foo);
       resource.a = 'Goodbye';
       var next = TestStore.put(resource);
-      expect(TestStore.get(resource.id)).toEqual(resource);
+      expect(TestStore.get(resource[ID_FIELD])).toEqual(resource);
     });
   });
 
@@ -36,8 +38,10 @@ describe("Store", function(){
     it("should replace the original object", function(){
       spyOn(Utils, 'replaceResourceContents').andCallThrough();
       var flossy = {id: 'flossy', type: 'Sheep', name: 'flossy', farm: 'Green Acres'};
+      flossy[ID_FIELD] = flossy.id;
       TestStore.put(flossy);
       var flossy2 = {id: 'flossy', type: 'Sheep', name: 'flossy', farm: { name: 'Waltons Farm'} };
+      flossy2[ID_FIELD] = flossy2.id;
       TestStore.put(flossy2);
       var sheep = TestStore.list({type:'Sheep'});
       expect(sheep[0].farm.name).toEqual( 'Waltons Farm');
@@ -47,7 +51,9 @@ describe("Store", function(){
   });
   describe(".delete", function(){
     it("should delete the object from the store", function(){
-      var res = TestStore.put({type:'Dog',name:'Pluto', 'id': 'Dog:1'});
+      var dog = {type:'Dog',name:'Pluto', 'id': 'Dog:1'};
+      dog[ID_FIELD] = dog.id;
+      var res = TestStore.put(dog);
       TestStore.delete(res);
       expect(TestStore.get('Dog:1')).toBeFalsy();
     });
@@ -75,13 +81,14 @@ describe("Store", function(){
           name: 'Prof. Moriarty'
         } 
       };
+      this.resource.friends[0][ID_FIELD] = this.resource.friends[0].id;
       TestStore.indexResource(this.resource);
     });
     it("should copy object property values to top level in the index", function(){
       expect(TestStore.get('mrsH')).toBe(this.resource.friends[0]);
     });
     it("should assign ids to object property values that don't have them", function(){
-      expect(this.resource.friends[1].id).toBeTruthy();
+      expect(this.resource.friends[1][ID_FIELD]).toBeTruthy();
     });
     it("should cope with circular references", function(){
       this.resource.friends[0].friend = this.resource;
@@ -92,9 +99,9 @@ describe("Store", function(){
       var a = {}, b = {}, c = {};
       a.next = b; b.next = c;  c.next = a;
       TestStore.indexResource(a);
-      expect(a.id).toBeTruthy();
-      expect(b.id).toBeTruthy();
-      expect(c.id).toBeTruthy();
+      expect(a[ID_FIELD]).toBeTruthy();
+      expect(b[ID_FIELD]).toBeTruthy();
+      expect(c[ID_FIELD]).toBeTruthy();
     });
   });
 
@@ -102,11 +109,15 @@ describe("Store", function(){
   describe("flatten and unflatten", function(){
     it("should keep arrays as arrays", function(){
       var a = {id: 'a', list: [ 2,4,7,8 ]};
+      a[ID_FIELD] = a.id;
       var index = TestStore.flatten(a);
       expect(Array.isArray(index['a'].list)).toBeTruthy();
     });
     it("should cope with circular references", function(){
       var a = {id:'a'}, b = {id:'b'}, c = {id:'c'};
+      a[ID_FIELD] = a.id;
+      b[ID_FIELD] = b.id;
+      c[ID_FIELD] = c.id;
       a.next = b; b.next = c;  c.next = a;
       var data = TestStore.flatten(a);
       expect(Object.keys(data).length).toBe(3);
@@ -130,6 +141,11 @@ describe("Store", function(){
       var user = {type: 'Role', name: 'User', id: 'user'};
       var user_a = {type: 'User', id: 'a', role: admin };
       var user_b = {type: 'User', id: 'b', role: admin };
+      admin[ID_FIELD] = admin.id;
+      user[ID_FIELD] = user.id;
+      user_a[ID_FIELD] = user_a.id;
+      user_b[ID_FIELD] = user_b.id;
+      
       TestStore.put(user_a);
       TestStore.put(user_b);
       user_a.role = user;

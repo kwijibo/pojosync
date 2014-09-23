@@ -31,9 +31,9 @@ Example use with express.js. (For alternate socket.io setups, see
 You will also need to add:
 
     <script src="/socket.io/socket.io.js"></script>
-
+    //io defined by socket.io.js
     var pojo = require('pojosync');
-    var Client = new pojo.Client();
+    var Client = new pojo.Client(io);
     var flossy = { type: 'Sheep', name: 'Flossy', age: 3 };
     Client.put(flossy); 
 
