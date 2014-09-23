@@ -80,4 +80,17 @@ describe(".mergeResourceContents", function(){
     expect(oldr.likes.name).toBe('Trixie');
     expect(oldr.likes.worksFor).toBe('Strickland');
   });
+  it("should cope with null values in before", function(){
+    var before = { foo: null };
+    var after = { foo: 'bar' };
+    Utils.mergeResourceContents(before,after);
+    expect(after.foo).toBe('bar');
+  });
+
+  it("should cope with null values in after", function(){
+    var before = { foo: 'bar' };
+    var after = { foo: null };
+    Utils.mergeResourceContents(before,after);
+    expect(after.foo).toBe(null);
+  })
 });
