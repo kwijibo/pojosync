@@ -83,14 +83,20 @@ describe(".mergeResourceContents", function(){
   it("should cope with null values in before", function(){
     var before = { foo: null };
     var after = { foo: 'bar' };
-    Utils.mergeResourceContents(before,after);
-    expect(after.foo).toBe('bar');
+    var result = Utils.mergeResourceContents(before,after);
+    expect(before.foo).toBe('bar');
   });
 
   it("should cope with null values in after", function(){
     var before = { foo: 'bar' };
     var after = { foo: null };
-    Utils.mergeResourceContents(before,after);
-    expect(after.foo).toBe(null);
-  })
+    var result = Utils.mergeResourceContents(before,after);
+    expect(before.foo).toBe(null);
+  });
+
+  it("it should cope with a null value as before", function(){
+    var before = null, after = {foo:'bar'};
+    var result = Utils.mergeResourceContents(before,after);
+    expect(result).toBe(after);
+  });
 });
