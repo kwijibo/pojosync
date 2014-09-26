@@ -58,8 +58,8 @@ describe("Socket Interaction", function(){
   }
 };
     Server = new live.Server(serverIO);
-    ClientA = new live.Client(clientIO);
-    ClientB = new live.Client(clientIO);
+    ClientA = new live.Client(clientIO.connect());
+    ClientB = new live.Client(clientIO.connect());
   });
 
   describe("registerFilter", function(){

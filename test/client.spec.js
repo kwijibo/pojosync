@@ -6,7 +6,7 @@ describe("Client", function(){
   beforeEach(function(){
     var jsonify = function(ev, a){ return JSON.stringify(a)};
     var fun = function(){ return { on: fun, emit: jsonify } };
-    this.Client = new Client({connect:fun });
+    this.Client = new Client(fun());
     this.Client.Store.index = {};
   });
   describe(".put", function(){
