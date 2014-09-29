@@ -58,6 +58,13 @@ describe("Utils.replaceResourceContents", function(){
     expect(b.a).toBe(4);
   });
 
+  it("should cope with replacing objects containing null values", function(){
+    var A = {foo: null};
+    var B = {foo: null, bar:45};
+    Utils.replaceResourceContents(A,B);
+    expect(A.bar).toBe(45);
+  });
+
 });
 
 
@@ -95,8 +102,9 @@ describe(".mergeResourceContents", function(){
   });
 
   it("it should cope with a null value as before", function(){
-    var before = null, after = {foo:'bar'};
-    var result = Utils.mergeResourceContents(before,after);
-    expect(result).toBe(after);
+    var before = {}, after = {foo:'bar', bar: null};
+    var result = Utils.mergeResourceContents(before,after, true);
+    expect(before.foo).toBe('bar');
+    expect(before.bar).toBe(null);
   });
 });

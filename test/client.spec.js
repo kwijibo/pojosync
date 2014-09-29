@@ -49,6 +49,14 @@ describe("Client", function(){
       expect(flossylistB[0].farm.name).toEqual('Green Acres');
       expect(indexedFlossy.farm.name).toEqual('Green Acres');
     });
+
+    it("should cope with objects with null values", function(){
+      var job = {"uri": "ff80808148c18b480148c1c037cd0021","creator":null,"creation_time":1411999872000,"name":"Copy Move Delete Upload Test","full_name":"Copy Move Delete Upload Test - 5909","started_on":1412002840514,"completed_on":null,"progress":0,"status":"RUNNING","instance_id":null};
+      var job2 = {"uri": "ff80808148c18b480148c1c037cd0021","creator":null,"creation_time":1411999872000,"name":"Copy Move Delete Upload Test","full_name":"Copy Move Delete Upload Test - 5909","started_on":1412002840514,"completed_on":null,"progress":0,"status":"RUNNING","instance_id":null};
+      var result = this.Client.put(job);
+      var result2 = this.Client.put(job2);
+      expect(result.name).toBe(job.name);
+    })
     describe(".receivePut replacing literal values with objects", function(){
       it("should replace the value with an object reference", function(){
         var flossy = { type: 'Sheep', name: 'flossy', farm: 'Green Acres'};
