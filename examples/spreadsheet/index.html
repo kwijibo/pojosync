@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <title>Spreadsheet PojoSync Example</title>
+  <style type="text/css" media="screen">
+    * { 
+      font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif 
+    }
+    td, tr, th {
+      margin: 0;
+      padding: 0;
+    }
+    td, th, table {
+      border: 1px #456def solid
+    }
+    input {
+      margin: 0;
+      padding: 1px;
+      border: none;
+      width: 6em;
+    }
+    table {
+      margin: auto;
+    }
+    h1 {
+      width: 10em;
+      margin: auto;
+      padding: 5px;
+    }
+    th {
+      color: white;
+      background: #456def
+    }
+  </style>
+</head>
+<body>
+  <h1>Spreadsheet</h1> 
+  <table id="spreadsheet"></table>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="bundle.js"></script>
+
+</body>
+</html>
