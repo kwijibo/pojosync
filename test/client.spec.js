@@ -128,8 +128,28 @@ describe("Client", function(){
       expect(this.Client.socketCallbacks.length).toBe(0);
     });
   });
+
+  describe("._getMatchingList", function(){
+    it("should return false when there are no matching lists", function(){
+      expect(this.Client._getMatchingList({type:'Baboon'})).toBeFalsy();
+    });
+    it("should return a list when there is a matching list", function(){
+      var book = {type:'Book',title:'Hard Times', date: '1888'};
+      this.Client.put(book);
+      this.Client.list({type: 'Book'});
+      expect(this.Client._getMatchingList({type:'Book'})).toEqual([book]);
+    });
+  });
   describe(".list", function(){
   
+    it("should return the same array for the same query", function(){ 
+      this.Client.put({name:'Greenacres',type:'Farm'});
+      var farms1 = this.Client.list({type:'Farm'});
+      var farms2 = this.Client.list({type:'Farm'});
+      expect(this.Client.lists.length).toBe(1);
+      expect(farms1).toBe(farms2);
+    });
+
     it("should return data in the callback", function(){
       var farms = this.Client.list({type:'Farm'});
       var flossy = {name: 'flossy', farm: { name: 'Green Acres', type: 'Farm' }};

@@ -108,3 +108,16 @@ describe(".mergeResourceContents", function(){
     expect(before.bar).toBe(null);
   });
 });
+
+describe(".objectsEquivalent", function(){
+  it("should return true when arguments have all the same properties and values", function(){
+    var a = {foo:34, bar: "$$"},
+        b = {foo:34, bar:"$$"};
+    expect(Utils.objectsEquivalent(a,b)).toBeTruthy();
+  });
+  it("should return false when arguments have differing properties and values", function(){
+    var a = {foo:36, bar: "$$"},
+        b = {foo:34, bar:"$$"};
+    expect(Utils.objectsEquivalent(a,b)).toBeFalsy();
+  });
+});
