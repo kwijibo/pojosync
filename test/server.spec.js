@@ -62,21 +62,42 @@ describe("Socket Interaction", function(){
     ClientB = new live.Client(clientIO.connect());
   });
 
-  describe("registerFilter", function(){
-    it("should not apply the 'put' until it has gone through the filter", function(){
+  describe(".registerPutFilter", function(){
+    it("should not apply the put until it has gone through the filter", function(){
+    
       var filterCalled=false;
       var putCalled = false;
-      Server.registerFilter('put', function(server,data,success){
+      Server.registerPutFilter({foo:"bar"}, function(server,data,success){
         success(data);
         filterCalled=true;
       });
+
       var data = {foo: "bar"};
       ClientA.put(data, function(data){ 
         putCalled=true;
       });
       expect(filterCalled).toBe(true);
       expect(putCalled).toBe(true);
-    }); 
+    });
+  });
+
+  describe(".registerListFilter", function(){
+    it("should call the filter function before returning the list", function(){
+    
+      var filterCalled=false;
+      var listCalled = false;
+      Server.registerListFilter({foo:"bar"}, function(server,socket, params, success){
+        success([{foo:"bar",age:3}]);
+        filterCalled=true;
+      });
+
+      var data = {foo: "bar"};
+      ClientA.list(data, function(data){ 
+        listCalled=true;
+      });
+      expect(filterCalled).toBe(true);
+      expect(listCalled).toBe(true);
+    });
   });
 
   describe(".put a new object", function(){
