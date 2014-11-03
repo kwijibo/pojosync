@@ -7,6 +7,17 @@ describe("Store", function(){
   beforeEach(function(){
     TestStore = new Store();
   });  
+
+  describe("matchesFilter", function(){
+    it("should return false if the filter doesn't match",function(){
+      expect(TestStore.matchesFilter({type:"Bar"}, {type:"Foo"})).toBe(false);
+    });
+
+    it("should return true if the filter does match",function(){
+      expect(TestStore.matchesFilter({id: "bc52", type:"Bar"}, {type:"Bar"})).toBe(true);
+    })
+  });
+
   describe("assignID", function(){
     it("should assign an id based on 'resource' ", function(){
       var res = TestStore.assignID({nottype:'Rabbit'});

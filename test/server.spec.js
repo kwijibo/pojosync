@@ -79,6 +79,40 @@ describe("Socket Interaction", function(){
       expect(filterCalled).toBe(true);
       expect(putCalled).toBe(true);
     });
+    it("should work with empty match object", function(){
+      
+      var filterCalled=false;
+      var putCalled = false;
+      Server.registerPutFilter({}, function(server,data,success){
+        success(data);
+        filterCalled=true;
+      });
+
+      var data = {foo: "bar"};
+      ClientA.put(data, function(data){ 
+        putCalled=true;
+      });
+      expect(filterCalled).toBe(true);
+      expect(putCalled).toBe(true);
+    });
+
+    it("should not run filter on non-matching data", function(){  
+      var filterCalled=false;
+      var putCalled = false;
+      Server.registerPutFilter({bar: "mars"}, function(server,data,success){
+        success(data);
+        filterCalled=true;
+      });
+
+      var data = {foo: "bar"};
+
+      ClientA.put(data, function(data){ 
+        putCalled=true;
+      });
+     
+      expect(filterCalled).toBe(false);
+      expect(putCalled).toBe(true);
+    });
   });
 
   describe(".registerListFilter", function(){
