@@ -121,15 +121,15 @@ describe("Socket Interaction", function(){
         success([{foo:"bar",age:3}]);
         filterCalled=true;
       }
-      Server.registerListFilter({foo:"bar"}, myPutFilter);
+      Server.registerPutFilter({foo:"bar"}, myPutFilter);
 
       var putFilters = Server._getMatchingFilters({foo:'bar'}, Server.put_filters);
 
-      expect(putFilters).toBe([myPutFilter]);
+      expect(putFilters).toContain(myPutFilter);
     });
     it("should return null for non matching data", function(){
       
-      Server.registerListFilter({foo:"bar"}, function myPutFilter(server,socket, params, success){
+      Server.registerPutFilter({foo:"bar"}, function (server,socket, params, success){
         success([{foo:"bar",age:3}]);
         filterCalled=true;
       });
