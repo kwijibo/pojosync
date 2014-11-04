@@ -20,7 +20,9 @@
     "sockets"
   ],
   "dependencies": {
-  	"socket.io": "1.1.0"
+  	"socket.io": "1.1.0",
+    "jasmine-node": "1.14.5",
+    "when":"3.5.2"
   },
   "author": "Keith Alexander",
   "license": "BSD",
