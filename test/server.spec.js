@@ -127,7 +127,7 @@ describe("Socket Interaction", function(){
 
       expect(putFilters).toContain(myPutFilter);
     });
-    it("should return null for non matching data", function(){
+    it("should return an empty array for non matching data", function(){
       
       Server.registerPutFilter({foo:"bar"}, function (server,socket, params, success){
         success([{foo:"bar",age:3}]);
@@ -136,7 +136,7 @@ describe("Socket Interaction", function(){
 
       var putFilters = Server._getMatchingFilters({ex:'wool'}, Server.put_filters);
 
-      expect(putFilters).toBe([]);
+      expect(putFilters).toEqual([]);
     });
   });
 
