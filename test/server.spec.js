@@ -76,8 +76,14 @@ describe("Socket Interaction", function(){
       ClientA.put(data, function(data){ 
         putCalled=true;
       });
-      expect(filterCalled).toBe(true);
-      expect(putCalled).toBe(true);
+      waitsFor(function() {
+        return putCalled;
+      }, "the put callback must be invoked", 5000);
+
+      runs(function(){ 
+        expect(filterCalled).toBe(true);
+        expect(putCalled).toBe(true);
+      });
     });
     it("should work with empty match object", function(){
       
@@ -92,8 +98,14 @@ describe("Socket Interaction", function(){
       ClientA.put(data, function(data){ 
         putCalled=true;
       });
-      expect(filterCalled).toBe(true);
-      expect(putCalled).toBe(true);
+
+      waitsFor(function() {
+        return putCalled;
+      }, "the put callback must be invoked", 5000);
+      runs(function(){
+        expect(filterCalled).toBe(true);
+        expect(putCalled).toBe(true);
+      });
     });
 
     it("should not run filter on non-matching data", function(){  
@@ -109,7 +121,11 @@ describe("Socket Interaction", function(){
       ClientA.put(data, function(data){ 
         putCalled=true;
       });
-     
+
+      waitsFor(function() {
+        return putCalled;
+      }, "the put callback must be invoked", 5000);
+
       expect(filterCalled).toBe(false);
 //      expect(putCalled).toBe(true);
     });
@@ -154,8 +170,11 @@ describe("Socket Interaction", function(){
       ClientA.list(data, function(data){ 
         listCalled=true;
       });
-      expect(filterCalled).toBe(true);
-      expect(listCalled).toBe(true);
+
+      runs(function(){
+        expect(filterCalled).toBe(true);
+        expect(listCalled).toBe(true);
+      });
     });
   });
 
@@ -163,17 +182,33 @@ describe("Socket Interaction", function(){
     it("should share between the clients", function(){
       var blob = {id: 'Sherlock', name: 'Sherlock'};
       blob[ID_FIELD] = blob.id;
-      ClientA.put(blob);
-      expect(ClientB.Store.index).toEqual(ClientA.Store.index);
+      var isPut = false;
+      ClientA.put(blob, function(){
+        isPut=true;
+      });
+      
+      waitsFor(function(){
+        return isPut;
+      },"put timed out", 5000);
+
+      runs(function(){
+        expect(ClientB.Store.index).toEqual(ClientA.Store.index);
 //      expect(Server.Store.index).toEqual(ClientA.Store.index);
+      });
     });
     it("should unflatten objects", function(){ 
       var blob = {id: 'Sherlock', name: 'Sherlock', friend: { name: 'Watson'}};
       blob[ID_FIELD] = blob.id;
-      var sherlock = ClientA.put(blob);
-      expect(sherlock.friend.name).toBe('Watson');
-      expect(ClientB.Store).toEqual(ClientA.Store);
-//      expect(Server.Store).toEqual(ClientA.Store);
+      var isPut = false;
+      var sherlock = ClientA.put(blob, function(){
+        isPut=true;
+      });
+      waitsFor(function(){ return isPut }, "put timed out", 500);
+      runs(function(){
+        expect(sherlock.friend.name).toBe('Watson');
+        expect(ClientB.Store).toEqual(ClientA.Store);
+        //expect(Server.Store).toEqual(ClientA.Store);
+      });
     });
     describe("replacing literal values with objects", function(){
       it("should replace the value", function(){
