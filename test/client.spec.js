@@ -161,6 +161,14 @@ describe("Client", function(){
       expect(farms.length).toBe(1);
       expect(indexedFlossy.farm.name).toEqual('Green Acres');
     });
+
+    it("should work when called twice with empty params BUG", function(){
+      var a = this.Client.list();
+      var b = this.Client.list();
+      expect(a).toBe(b);
+    });
+
+
   });
 
   describe("addSocketCallback", function(){
