@@ -6,6 +6,8 @@ var app = require('http').createServer(handler)
 
 app.listen(8000);
 
+console.log("Pojosync Spreadsheet example server running at \n http://localhost:8000\n");
+
 function handler (req, res) {
   console.log("Client requested: ", req.url);
   if(req.url =='/') req.url = '/index.html';

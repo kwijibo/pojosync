@@ -38,6 +38,17 @@ describe("Store", function(){
         var res = TestStore.get('frank');
         expect(res).toEqual({uri: 'frank', loves: [{uri: 'Music'} ] });
       });
+
+      it("should create nested arrays", function(){
+        var expected ={ uri: 's', rows: [{uri:'r1', cols: [{uri:'r1-c1', value: 'v1'}]}] };
+        var cs = [
+          {action: 'addition', s: 's', p: 'rows', p_type: 'array', o: 'r1', o_type: 'resource'},
+          {action: 'addition', s: 'r1', p: 'cols', p_type: 'array', o: 'r1-c1', o_type: 'resource'},
+          {action: 'addition', s: 'r1-c1', p: 'value', p_type: 'single', o: 'v1', o_type: 'literal'}
+        ];
+        TestStore.applyChangeset(cs);
+        expect(TestStore.get('s')).toEqual(expected);
+      });
         
       describe("with existing data", function(){
         beforeEach(function(){

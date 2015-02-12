@@ -13,9 +13,9 @@ Spreadsheet = function(rows, columns){
   this.rows = [];
   this.type = 'Sheet';
   for (var i = 0; i < rows; i++) {
-    var row = {cols:[], type: 'Row' };
+    var row = {cols:[], type: 'Row', uri: 'row-'+i };
     for(var j =0; j < columns; j++){
-      row.cols.push({ type: 'Cell', value: ''});
+      row.cols.push({ type: 'Cell', value: '', uri: 'cell-'+i+'-'+j });
     }
     this.rows.push(row);
   };
@@ -59,18 +59,29 @@ var SheetToHtml = function(sheet,table_id){
 
 };
 
-PojoSync.list({id: 'spreadsheet1'}, function(list){
+PojoSync.list({type:'Sheet'}, function(list){
   console.log(list);
-  Sheet = list[0] || new Spreadsheet(50,15);
-  Sheet.uri='spreadsheet1';
-  PojoSync.put(Sheet);
+  Sheet = list[0];
+  if(!Sheet){
+    Sheet = new Spreadsheet(2,5);
+    Sheet.uri='spreadsheet1';
+    PojoSync.put(Sheet);
+  }
   SheetToHtml(Sheet, 'spreadsheet');
-  PojoSync.addSocketCallback(function(d){
-    console.log("pojosync socket callback", d);
-    for(var k in d){
-      var el = document.getElementById(k);
+  PojoSync.addSocketCallback(function(cs){
+    console.log("pojosync socket callback", cs);
+    var subjects = [];
+    for (var i = 0; i < cs.length; i++) {
+      var s = cs[i].s;
+      if(subjects.indexOf(s)===-1){
+        subjects.push(s);
+      }
+    }
+    for (var i = 0; i < subjects.length; i++) {
+     var id = subjects[i];
+     var el = document.getElementById(id);
       if(el){
-        el.value = d[k].value;
+        el.value = PojoSync.get(id).value;
       }
     }
   });

@@ -39,6 +39,17 @@ describe("Changeset", function(){
     expect(cs).toEqual(expected);
   });
 
+  it("should cope with nested arrays and objects", function(){
+    var before={};
+    var after={ uri: 's', rows: [{uri:'r1', cols: [{uri:'r1-c1', value: 'v1'}]}] };
+    var expected = [
+      {action: 'addition', s: 's', p: 'rows', p_type: 'array', o: 'r1', o_type: 'resource'},
+      {action: 'addition', s: 'r1', p: 'cols', p_type: 'array', o: 'r1-c1', o_type: 'resource'},
+      {action: 'addition', s: 'r1-c1', p: 'value', p_type: 'single', o: 'v1', o_type: 'literal'}
+    ];
+    expect(Changeset(before,after)).toEqual(expected);
+  });
+
 
   describe("replacing nested objects", function(){
     it("shouldn't lose triples", function(){
