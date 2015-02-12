@@ -23,7 +23,7 @@
     "jasmine-node": "1.14.5",
     "levelgraph": "^0.10.1",
     "socket.io": "1.1.0",
-    "when": "3.5.2"
+    "when": "^3.5.2"
   },
   "author": "Keith Alexander",
   "license": "BSD",

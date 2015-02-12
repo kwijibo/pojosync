@@ -121,3 +121,13 @@ describe(".objectsEquivalent", function(){
     expect(Utils.objectsEquivalent(a,b)).toBeFalsy();
   });
 });
+
+describe("matchesFilter", function(){
+    it("should return false if the filter doesn't match",function(){
+      expect(Utils.matchesFilter({type:"Bar"}, {type:"Foo"})).toBe(false);
+    });
+
+    it("should return true if the filter does match",function(){
+      expect(Utils.matchesFilter({id: "bc52", type:"Bar"}, {type:"Bar"})).toBe(true);
+    })
+});

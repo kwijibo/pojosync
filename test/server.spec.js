@@ -62,7 +62,7 @@ describe("Socket Interaction", function(){
     ClientB = new live.Client(clientIO.connect());
   });
 
-  describe(".registerPutFilter", function(){
+  xdescribe(".registerPutFilter", function(){
     it("should not apply the put until it has gone through the filter", function(){
     
       var filterCalled=false;
@@ -131,7 +131,7 @@ describe("Socket Interaction", function(){
     });
   });
 
-  describe("._getMatchingFilters", function(){
+  xdescribe("._getMatchingFilters", function(){
     it("should return functions for matching data", function(){
       var myPutFilter = function (server,socket, params, success){
         success([{foo:"bar",age:3}]);
@@ -156,7 +156,7 @@ describe("Socket Interaction", function(){
     });
   });
 
-  describe(".registerListFilter", function(){
+  xdescribe(".registerListFilter", function(){
     it("should call the filter function before returning the list", function(){
     
       var filterCalled=false;
@@ -178,48 +178,4 @@ describe("Socket Interaction", function(){
     });
   });
 
-  describe(".put a new object", function(){
-    it("should share between the clients", function(){
-      var blob = {id: 'Sherlock', name: 'Sherlock'};
-      blob[ID_FIELD] = blob.id;
-      var isPut = false;
-      ClientA.put(blob, function(){
-        isPut=true;
-      });
-      
-      waitsFor(function(){
-        return isPut;
-      },"put timed out", 5000);
-
-      runs(function(){
-        expect(ClientB.Store.index).toEqual(ClientA.Store.index);
-//      expect(Server.Store.index).toEqual(ClientA.Store.index);
-      });
-    });
-    it("should unflatten objects", function(){ 
-      var blob = {id: 'Sherlock', name: 'Sherlock', friend: { name: 'Watson'}};
-      blob[ID_FIELD] = blob.id;
-      var isPut = false;
-      var sherlock = ClientA.put(blob, function(){
-        isPut=true;
-      });
-      waitsFor(function(){ return isPut }, "put timed out", 500);
-      runs(function(){
-        expect(sherlock.friend.name).toBe('Watson');
-        expect(ClientB.Store).toEqual(ClientA.Store);
-        //expect(Server.Store).toEqual(ClientA.Store);
-      });
-    });
-    describe("replacing literal values with objects", function(){
-      it("should replace the value", function(){
-        var flossy = {type: 'Sheep', name: 'flossy', farm: 'Green Acres'};
-        ClientA.put(flossy);
-        flossy.farm = {name: 'Waltons Farm', type: 'Farm'};
-        ClientA.put(flossy);
-        var sheep = ClientB.list({type:'Sheep'});
-        expect(sheep[0].farm.name).toEqual( 'Waltons Farm');
-        expect(flossy.farm.name).toEqual( 'Waltons Farm');
-      });
-    });
-  });
 });
