@@ -167,6 +167,13 @@ describe("Client", function(){
       var b = this.Client.list();
       expect(a).toBe(b);
     });
+    it("should call the callback when the list is fetched from cache", function(){
+      var a = this.Client.list({type:'Farm'});
+      var x = { callback: function(){} }
+      spyOn(x, 'callback')
+      var b = this.Client.list({type: 'Farm'}, x.callback);
+      expect(x.callback).toHaveBeenCalled();
+    });
 
 
   });

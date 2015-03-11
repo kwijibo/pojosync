@@ -154,6 +154,15 @@ describe("Socket Interaction", function(){
 
       expect(putFilters).toEqual([]);
     });
+
+    it("should cope with cyclical references in data", function(){
+      var foo = { id: 'foo' }
+      var bar = {id: 'bar' }
+      foo.bar = bar
+      bar.foo = foo
+      var putFilters = Server._getMatchingFilters(foo, Server.put_filters);
+      expect(putFilters).toEqual([])
+    })
   });
 
   describe(".registerListFilter", function(){
